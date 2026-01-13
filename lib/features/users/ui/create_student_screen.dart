@@ -28,7 +28,10 @@ class CreateStudentScreen extends ConsumerWidget {
         child: Column(
           children: [
             TextField(
-              decoration: const InputDecoration(labelText: "Name"),
+              decoration: InputDecoration(
+                labelText: "Name",
+                errorText: form.name.isEmpty ? "Name Required" : null,
+              ),
               onChanged: notifier.setName,
             ),
             DropdownButtonFormField<SchoolClass>(
@@ -40,6 +43,7 @@ class CreateStudentScreen extends ConsumerWidget {
               onChanged: (value) => notifier.setClass(value!),
             ),
             DropdownButtonFormField<Section>(
+              decoration: const InputDecoration(labelText: "Section"),
               initialValue: form.section,
               items: Section.values.map((c) {
                 return DropdownMenuItem(value: c, child: Text(c.name));
@@ -47,11 +51,45 @@ class CreateStudentScreen extends ConsumerWidget {
               onChanged: (value) => notifier.setSection(value!),
             ),
             DropdownButtonFormField<House>(
+              decoration: const InputDecoration(labelText: "House"),
               initialValue: form.house,
               items: House.values.map((c) {
                 return DropdownMenuItem(value: c, child: Text(c.name));
               }).toList(),
               onChanged: (value) => notifier.setHouse(value!),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Phone Number",
+                errorText: form.phone.isEmpty
+                    ? null
+                    : (form.phone.length != 10
+                          ? "Enter 10 digit number"
+                          : null),
+              ),
+              keyboardType: TextInputType.phone,
+              onChanged: notifier.setPhone,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Father's Name",
+                errorText: form.address.isEmpty ? "Father's Name Required" : null,
+              ),
+              onChanged: notifier.setFather,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Mother's Name",
+                errorText: form.address.isEmpty ? "Mother's Name Required" : null,
+              ),
+              onChanged: notifier.setMother,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Address",
+                errorText: form.address.isEmpty ? "Address Required" : null,
+              ),
+              onChanged: notifier.setAddress,
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.add_a_photo),
@@ -74,47 +112,68 @@ class CreateStudentScreen extends ConsumerWidget {
                 }
               },
             ),
+            Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Text("Name: ${form.name.isNotEmpty}"),
+    Text("Class: ${form.schoolClass != null}"),
+    Text("Section: ${form.section != null}"),
+    Text("House: ${form.house != null}"),
+    Text("Phone(10): ${form.phone.length == 10}"),
+    Text("Mother: ${form.mother.isNotEmpty}"),
+    Text("Father: ${form.father.isNotEmpty}"),
+    Text("Address: ${form.address.isNotEmpty}"),
+    Text("Image: ${form.profileImage64.isNotEmpty}"),
+    const Divider(),
+    Text("FORM VALID = ${form.isValid}", style: TextStyle(fontWeight: FontWeight.bold)),
+  ],
+),
+
             ElevatedButton(
               child: const Text("Create Student"),
-              onPressed: () async {
-                final form = ref.read(studentFormProvider);
-                debugPrint("FINAL IMAGE LENGTH: ${form.profileImage64.length}");
-                final service = UserService();
+              onPressed: form.isValid
+                  ? () async {
+                      final form = ref.read(studentFormProvider);
+                      debugPrint(
+                        "FINAL IMAGE LENGTH: ${form.profileImage64.length}",
+                      );
+                      final service = UserService();
 
-                final count = await service.getStudentCount();
+                      final count = await service.getStudentCount();
 
-                final studentId = IdGenerator.genenrateStudentId(
-                  year: DateTime.now().year,
-                  classId: form.schoolClass!.name,
-                  section: form.section!.name,
-                  index: count,
-                );
+                      final studentId = IdGenerator.genenrateStudentId(
+                        year: DateTime.now().year,
+                        classId: form.schoolClass!.name,
+                        section: form.section!.name,
+                        index: count,
+                      );
 
-                final password = PasswordGenerator.generate();
+                      final password = PasswordGenerator.generate();
 
-                final student = StudentModel(
-                  studentId: studentId,
-                  name: form.name,
-                  classId: form.schoolClass!.name,
-                  section: form.section!.name,
-                  house: form.house!.name,
-                  phone: form.phone,
-                  motherName: form.mother,
-                  fatherName: form.father,
-                  address: form.address,
-                  // profilePicUrl: '',
-                  password: password,
-                  isPassChanged: false,
-                  status: 'Active',
-                  profileImage64: form.profileImage64,
-                );
+                      final student = StudentModel(
+                        studentId: studentId,
+                        name: form.name,
+                        classId: form.schoolClass!.name,
+                        section: form.section!.name,
+                        house: form.house!.name,
+                        phone: form.phone,
+                        motherName: form.mother,
+                        fatherName: form.father,
+                        address: form.address,
+                        // profilePicUrl: '',
+                        password: password,
+                        isPassChanged: false,
+                        status: 'Active',
+                        profileImage64: form.profileImage64,
+                      );
 
-                await service.createStudent(student);
+                      await service.createStudent(student);
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Student Created: $studentId")),
-                );
-              },
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Student Created: $studentId")),
+                      );
+                    }
+                  : null,
             ),
           ],
         ),

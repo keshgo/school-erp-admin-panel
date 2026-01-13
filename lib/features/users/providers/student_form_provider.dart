@@ -30,6 +30,19 @@ class StudentFormState {
     this.profileImage64 = "",
   });
 
+ bool get isValid {
+  return name.trim().isNotEmpty &&
+      schoolClass != null &&
+      section != null &&
+      house != null &&
+      phone.length == 10 &&
+      mother.trim().isNotEmpty &&
+      father.trim().isNotEmpty &&
+      address.trim().isNotEmpty &&
+      profileImage64.isNotEmpty;
+}
+
+
   StudentFormState copyWith({
     String? name,
     SchoolClass? schoolClass,
