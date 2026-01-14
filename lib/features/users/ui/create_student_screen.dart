@@ -73,14 +73,18 @@ class CreateStudentScreen extends ConsumerWidget {
             TextField(
               decoration: InputDecoration(
                 labelText: "Father's Name",
-                errorText: form.address.isEmpty ? "Father's Name Required" : null,
+                errorText: form.address.isEmpty
+                    ? "Father's Name Required"
+                    : null,
               ),
               onChanged: notifier.setFather,
             ),
             TextField(
               decoration: InputDecoration(
                 labelText: "Mother's Name",
-                errorText: form.address.isEmpty ? "Mother's Name Required" : null,
+                errorText: form.address.isEmpty
+                    ? "Mother's Name Required"
+                    : null,
               ),
               onChanged: notifier.setMother,
             ),
@@ -112,25 +116,7 @@ class CreateStudentScreen extends ConsumerWidget {
                 }
               },
             ),
-            Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Text("Name: ${form.name.isNotEmpty}"),
-    Text("Class: ${form.schoolClass != null}"),
-    Text("Section: ${form.section != null}"),
-    Text("House: ${form.house != null}"),
-    Text("Phone(10): ${form.phone.length == 10}"),
-    Text("Mother: ${form.mother.isNotEmpty}"),
-    Text("Father: ${form.father.isNotEmpty}"),
-    Text("Address: ${form.address.isNotEmpty}"),
-    Text("Image: ${form.profileImage64.isNotEmpty}"),
-    const Divider(),
-    Text("FORM VALID = ${form.isValid}", style: TextStyle(fontWeight: FontWeight.bold)),
-  ],
-),
-
             ElevatedButton(
-              child: const Text("Create Student"),
               onPressed: form.isValid
                   ? () async {
                       final form = ref.read(studentFormProvider);
@@ -174,6 +160,7 @@ class CreateStudentScreen extends ConsumerWidget {
                       );
                     }
                   : null,
+              child: const Text("Create Student"),
             ),
           ],
         ),

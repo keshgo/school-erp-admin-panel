@@ -1,4 +1,5 @@
 import 'package:admin_panel/features/users/ui/create_student_screen.dart';
+import 'package:admin_panel/features/users/ui/create_teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const CreateStudentScreen(),
+      home: const CreateTeacherScreen(),
     );
   }
 }

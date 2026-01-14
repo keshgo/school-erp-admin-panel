@@ -16,3 +16,5 @@ enum SchoolClass {
 enum House { sialia, canary, dove, hansa }
 
 enum Section { A, B, C, D }
+
+enum Department { mathematics, science, english, hindi, music, dance }
